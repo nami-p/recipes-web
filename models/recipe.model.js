@@ -22,7 +22,11 @@ const categorySchema = new mongoose.Schema({
     instructions:{type : String,required:true,minLength:[20 ,'instruction must contain as minimal 20 characters']},
     images:[{type:String,required:false}],
     isPrivate:{type:Boolean,required : false ,default:false},
+    //option 1 
     user: [minimalUserSchema]
+    //option 2
+    //users: [{ type: mongoose.Types.ObjectId, ref: 'users' }] 
+ 
 })
 
 
