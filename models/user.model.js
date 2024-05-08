@@ -1,10 +1,8 @@
 
 const mongoose = require('mongoose');
 const Joi = require('joi');
-
-// const bcrypt = require('bcrypt');
-// const mongoose = require('mongoose');
-// const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 
