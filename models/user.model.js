@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true , get(v) { return v.toUpperCase() } },
+    userName: { type: String, required: true , get(v) { return v.toUpperCase() } },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, minlength: [6, 'password length < 6'] },
     adress: { type: String, required: false},
@@ -19,24 +19,34 @@ const userSchema = new mongoose.Schema({
 
 //joi validations
 
-module.exports.userValidators = {
-    login: Joi.object().keys({
-        email: Joi.string().email().required(),
-        password: Joi.string().min(6).max(18),
-    })
-}
 
 // ensure strong password: minimum 6 characters including both uppercase and lowercase letters
 const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,18}$/;
 const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
-module.exports.validPassword = Joi.object({
-  password: Joi.string().pattern(new RegExp(pattern))
-});
 
-module.exports.validEmail = Joi.object({
-  email: Joi.string().pattern(new RegExp(pattern))
-});
+module.exports.userValidators = {
+    login: Joi.object().keys({
+        email: Joi.string().email().required(),
+        password: Joi.string().pattern(new RegExp(pattern))
+    }),
+    signUp: Joi.object().keys({
+        userName: Joi.string().required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().pattern(new RegExp(pattern)).required(),
+        adress:Joi.string().min(5),
+        role: Joi.string().valid('user', 'admin'),
+    })
+}
+
+
+// module.exports.validPassword = Joi.object({
+//   password: Joi.string().pattern(new RegExp(pattern))
+// });
+
+// module.exports.validEmail = Joi.object({
+//   email: Joi.string().pattern(new RegExp(pattern))
+// });
 
 
 
@@ -62,7 +72,7 @@ userSchema.pre('save', function (next) {
 module.exports.generateToken = (user) => {
     const privateKey = process.env.JWT_SECRET || 'JWT_SECRET'; 
     const data = { role: user.role, user_id: user._id }; 
-    const token = jwt.sign(data, privateKey, { expiresIn: '24h' });
+    const token = jwt.sign(data, privateKey, { expiresIn: '2h' });
     return token;
 }
 

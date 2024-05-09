@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 
 const minimalUserSchema = new mongoose.Schema({
-    userId: { type: Number, required: true },
+    id:{ type: mongoose.Types.ObjectId, ref: 'user' },
     name: { type: String, required: true, get(v) { return v.toUpperCase() } },
 })
 
