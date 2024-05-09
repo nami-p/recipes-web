@@ -20,6 +20,10 @@ app.use(morgan("dev"));
 // app.use(cors({origin:'http:// localhost:4200'})); 
 app.use(cors()); 
 
+app.get('/', (req, res) => {
+    res.send("wellcome");
+  });
+
 app.use("/users", userRouter);
 
 app.use(pageNotFound);

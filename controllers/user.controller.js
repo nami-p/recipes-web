@@ -30,18 +30,19 @@ exports.signIn = async (req, res, next) => {
 }
 
 exports.signUp = async (req, res, next) => {
-    const { userName, email, password, adress, role } = req.body;
-
-    const v = userValidators.signUp.validate(req.body);
+    const { userName, email, password, adress } = req.body;
+    let role='guest'
+    if (email === 'adminnnn@gmail.net' && password === '1234Aa')
+        role = 'admin';
+    else
+        role = 'user';
+    
+    const v = userValidators.signUp.validate({ userName, email, password, adress, role });
     if (v.error)
         return next({ message: v.error.message });
     else {
 
-        if (email === 'adminnnn@gmail.net' && password === '1234')
-            role = 'admin';
-        else
-            role = 'user';
-
+        
         try {
             const user = new User({ userName, email, password, adress, role });
             await user.save();
@@ -60,10 +61,7 @@ exports.signUp = async (req, res, next) => {
 exports.getAllUsers = async (req, res, next) => {
 
     try {
-        if (id !== updatedUser._id)
-            return next({ message: 'user id conflict', status: 409 });
-
-        else
+        
             //auth middleware added the user to the request
             if (req.user.role === "admin") {
 
@@ -78,7 +76,7 @@ exports.getAllUsers = async (req, res, next) => {
             }
 
     } catch (err) {
-        next(error);
+        next(err);
     }
 
 }
