@@ -31,18 +31,18 @@ exports.signIn = async (req, res, next) => {
 
 exports.signUp = async (req, res, next) => {
     const { userName, email, password, adress } = req.body;
-    let role='guest'
+    let role = 'guest'
     if (email === 'adminnnn@gmail.net' && password === '1234Aa')
         role = 'admin';
     else
         role = 'user';
-    
+
     const v = userValidators.signUp.validate({ userName, email, password, adress, role });
     if (v.error)
         return next({ message: v.error.message });
     else {
 
-        
+
         try {
             const user = new User({ userName, email, password, adress, role });
             await user.save();
@@ -61,19 +61,12 @@ exports.signUp = async (req, res, next) => {
 exports.getAllUsers = async (req, res, next) => {
 
     try {
-        
-            //auth middleware added the user to the request
-            if (req.user.role === "admin") {
 
-                let { search } = req.query;
-                search ??= '';
-                const users = await User.find({ userName: new RegExp(search) })
-                    .select('-__v');
-                return res.status(201).json(users);
-
-            } else {
-                next({ message: `user are not allowed to get all the users just adninistrator`, status: 403 })
-            }
+        let { search } = req.query;
+        search ??= '';
+        const users = await User.find({ userName: new RegExp(search) })
+            .select('-__v');
+        return res.status(201).json(users);
 
     } catch (err) {
         next(err);
