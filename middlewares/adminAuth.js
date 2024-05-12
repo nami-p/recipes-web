@@ -3,6 +3,6 @@ exports.adminAuth = (req, res, next) => {
     if (req.user.role === "admin") { 
         next();
     } else {
-        next({ message: `user are not allowed to get all the users just adninistrator`, status: 403 })
+        next({ message: `user are not allowed to get such a data please sighn in as admin`, status: 403 })
     }
 }
